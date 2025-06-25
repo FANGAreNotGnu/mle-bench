@@ -36,7 +36,7 @@ def save_output(container: Container, save_dir: Path, container_config: dict) ->
     else:
         extraction_fn = extract_from_container
 
-    for dir_type in ["SUBMISSION_DIR", "LOGS_DIR", "CODE_DIR"]:
+    for dir_type in ["SUBMISSION_DIR", "LOGS_DIR", "CODE_DIR", "AGENT_DIR"]:
         container_dir = CONSTANTS[dir_type]
         extraction_fn(container, container_dir, save_dir)
 

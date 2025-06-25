@@ -1,0 +1,22 @@
+vars:
+  step_count: &step_count 20
+  time_limit: &time_limit 86400 # 24 hrs
+
+defaults: &defaults
+  start: mlzero/start.sh
+  dockerfile: mlzero/Dockerfile
+  kwargs_type: omegaconf
+  env_vars: &env_vars
+    TIME_LIMIT_SECS: *time_limit
+    STEP_LIMIT: *step_count
+
+kwargs_common: &kwargs_common
+  exec.timeout: 32400 # 9 hours limit _per step_, to match max of kaggle.com
+  copy_data: False # use symbolic links
+
+mlzero:
+  <<: *defaults
+  kwargs:
+    <<: *kwargs_common
+  env_vars:
+    <<: *env_vars

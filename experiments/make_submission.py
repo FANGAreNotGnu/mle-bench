@@ -81,13 +81,13 @@ if __name__ == "__main__":
         "--rel-log-path",
         type=str,
         help="Path to logfile for analysis, relative to a run checkpoint. For example, if your logs are at `{runs_dir}/{run_id}/{checkpoint}/logs/agent.log`, this should be `logs/agent.log`.",
-        default="logs/agent.log",
+        default="logs/run.log",
     )
     parser.add_argument(
         "--rel-code-path",
         type=str,
         help="Path to code file for analysis, relative to a run checkpoint. For example, if your code is at `{runs_dir}/{run_id}/{checkpoint}/code/train.py`, this should be `code/train.py`.",
-        default="code/train.py",
+        default="code/code.py",
     )
 
     args = parser.parse_args()
