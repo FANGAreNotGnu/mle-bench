@@ -1,7 +1,7 @@
 {
     "mem_limit": null,
-    "shm_size": "440G",
-    "nano_cpus": 36e9,
+    "shm_size": "1024G",
+    "nano_cpus": 96e9,
     "runtime": "sysbox-runc",
     "gpus": -1
 }

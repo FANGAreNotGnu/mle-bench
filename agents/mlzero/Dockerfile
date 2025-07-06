@@ -22,7 +22,9 @@ RUN eval "$(conda shell.bash hook)" && \
     conda activate ${CONDA_ENV_NAME} && \
     # Install with constraints
     python3 -m pip install uv && \
-    python3 -m uv pip install git+https://github.com/FANGAreNotGnu/autogluon-assistant.git@mlebench0625 && \
+    cd ${AGENT_DIR} && \
+    git clone -b mlebench0625 https://github.com/FANGAreNotGnu/autogluon-assistant.git && \
+    python3 -m uv pip install -e autogluon-assistant && \
     conda deactivate
 # Set the working directory
 WORKDIR ${AGENT_DIR}

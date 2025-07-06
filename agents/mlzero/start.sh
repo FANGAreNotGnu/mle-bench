@@ -66,13 +66,13 @@ mkdir -p ${AGENT_DIR}/workspaces/exp
 #ln -s ${SUBMISSION_DIR} ${AGENT_DIR}/workspaces/bestsubmission
 # Run the agent with timeout
 echo "Starting the agent with a time limit of $TIME_LIMIT..."
-timeout $TIME_LIMIT_SECS python3 "/home/AutoMLAgent/run.py" \
+timeout $TIME_LIMIT_SECS mlzero \
     -e "/home/extracted_data/" \
     -i "/home/data/" \
     -o "${AGENT_DIR}/workspaces/exp" \
     -n 20 \
-    -v 1 \
-    -u "Use solution with best quality." \
+    -v 2 \
+    -u "Solve in 6 hours with best quality." \
 2>&1 | tee "${AGENT_DIR}/workspaces/exp/run.log"
 # Check if the process timed out
 if [ $? -eq 124 ]; then
@@ -88,7 +88,7 @@ fi
 
 #copy files
 cp ${AGENT_DIR}/workspaces/exp/results.csv ${SUBMISSION_DIR}/submission.csv
-cp ${AGENT_DIR}/workspaces/exp/iteration_0/generated_code.py ${CODE_DIR}/code.py
+cp ${AGENT_DIR}/workspaces/exp/generation_iter_0/generated_code.py ${CODE_DIR}/code.py
 cp ${AGENT_DIR}/workspaces/exp/run.log ${LOGS_DIR}/run.log
 
 # Validate submission
