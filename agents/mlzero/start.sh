@@ -2,6 +2,7 @@
 set -x # Print commands and their arguments as they are executed
 # Define base path for our Agent
 # Default values
+INSTRUCTIONS_FILE="/home/instructions.txt"
 CONDA_ENV="mlzero"
 # Determine hardware available
 if command -v nvidia-smi &> /dev/null && nvidia-smi --query-gpu=name --format=csv,noheader &> /dev/null; then
@@ -35,28 +36,20 @@ fi
 echo "Checking GPU availability..."
 python -c "import torch; print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'WARNING: No GPU')"
 python -c "import tensorflow as tf; print('GPUs Available: ', tf.config.list_physical_devices('GPU'))"
-# Handle obfuscation if needed
-if [ "$OBFUSCATE" = "true" ]; then
-    if [ ! -w /home/data/ ]; then
-        echo "Obfuscation not implemented for read-only mounts"
-        exit 1
-    fi
-    mv /home/instructions_obfuscated.txt /home/instructions.txt
-    mv /home/data/description_obfuscated.md /home/data/description.md
-fi
-# Prepare full instructions
-cp /home/instructions.txt ${AGENT_DIR}/full_instructions.txt
-# Update instructions for agent-specific details
-sed -i 's|/home/||g' ${AGENT_DIR}/full_instructions.txt
-# Add agent-specific instructions
-echo "" >> ${AGENT_DIR}/full_instructions.txt
-envsubst < ${AGENT_DIR}/additional_notes.txt >> ${AGENT_DIR}/full_instructions.txt
-# Append competition instructions
-printf "\nCOMPETITION INSTRUCTIONS\n------\n\n" >> ${AGENT_DIR}/full_instructions.txt
-cat /home/data/description.md >> ${AGENT_DIR}/full_instructions.txt
 
-cp ${AGENT_DIR}/full_instructions.txt /home/data/
-rm /home/data/description.md
+# --------- Construct instructions for agent 
+# Update instructions for agent-specific details: replace `/home/` paths to make paths relative
+# (since the agent will have its own copies of these files in its workspace).
+# e.g. /home/submission/submission.csv -> submission/submission.csv
+sed -i 's|/home/||g' $INSTRUCTIONS_FILE
+# further, add a linebreak and add the additional_notes (after substituting in env variables)
+echo "" >> $INSTRUCTIONS_FILE
+envsubst < /home/additional_notes.txt >> $INSTRUCTIONS_FILE
+
+cp $VALIDATION_SCRIPT ${AGENT_DIR}/validate_submission.sh
+cp $VALIDATION_SCRIPT /home/data/validate_submission.sh
+cp $INSTRUCTIONS_FILE ${AGENT_DIR}/full_instructions.txt
+cp $INSTRUCTIONS_FILE /home/data/full_instructions.txt
 
 # Create necessary directories
 mkdir -p ${AGENT_DIR}/workspaces/exp
