@@ -1,3 +1,4 @@
+docker build --platform=linux/amd64 -t mlebench-env -f environment/Dockerfile .
 export SUBMISSION_DIR=/home/submission
 export LOGS_DIR=/home/logs
 export CODE_DIR=/home/code
