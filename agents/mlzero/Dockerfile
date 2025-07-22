@@ -15,7 +15,7 @@ RUN mkdir -p ${LOGS_DIR} ${CODE_DIR} ${AGENT_DIR}
 # Specify the name of the conda environment to use
 ENV CONDA_ENV_NAME=mlzero
 # Create new conda environment
-RUN conda create -n ${CONDA_ENV_NAME} python=3.11 -y
+RUN conda create -n ${CONDA_ENV_NAME} python=3.11 -c conda-forge --override-channels -y
 # Put all the agent files in the expected location
 COPY . ${AGENT_DIR}
 RUN eval "$(conda shell.bash hook)" && \
@@ -23,7 +23,7 @@ RUN eval "$(conda shell.bash hook)" && \
     # Install with constraints
     python3 -m pip install uv && \
     cd ${AGENT_DIR} && \
-    git clone -b mlebench0625 https://github.com/FANGAreNotGnu/autogluon-assistant.git && \
+    git clone -b mlebench0717 https://github.com/FANGAreNotGnu/autogluon-assistant.git && \
     python3 -m uv pip install -e autogluon-assistant && \
     conda deactivate
 # Set the working directory

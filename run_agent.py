@@ -103,7 +103,10 @@ async def main(args):
             "Carefully consider if you wish to run this agent before continuing. See agents/README.md for more details."
         )
 
-    run_group = f"{get_timestamp()}_run-group_{agent.name}"
+    if args.run_dir:
+        run_group = args.run_dir
+    else:
+        run_group = f"{get_timestamp()}_run-group_{agent.name}"
 
     # Load competition ids and check all are prepared
     with open(args.competition_set, "r") as f:

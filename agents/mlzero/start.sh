@@ -3,6 +3,7 @@ set -x # Print commands and their arguments as they are executed
 # Define base path for our Agent
 # Default values
 INSTRUCTIONS_FILE="/home/instructions.txt"
+VALIDATION_SCRIPT="/home/validate_submission.sh"
 CONDA_ENV="mlzero"
 # Determine hardware available
 if command -v nvidia-smi &> /dev/null && nvidia-smi --query-gpu=name --format=csv,noheader &> /dev/null; then
@@ -46,10 +47,12 @@ sed -i 's|/home/||g' $INSTRUCTIONS_FILE
 echo "" >> $INSTRUCTIONS_FILE
 envsubst < /home/additional_notes.txt >> $INSTRUCTIONS_FILE
 
+mkdir /home/extracted_data
+
 cp $VALIDATION_SCRIPT ${AGENT_DIR}/validate_submission.sh
-cp $VALIDATION_SCRIPT /home/data/validate_submission.sh
+cp $VALIDATION_SCRIPT /home/extracted_data/validate_submission.sh
 cp $INSTRUCTIONS_FILE ${AGENT_DIR}/full_instructions.txt
-cp $INSTRUCTIONS_FILE /home/data/full_instructions.txt
+cp $INSTRUCTIONS_FILE /home/extracted_data/full_instructions.txt
 
 # Create necessary directories
 mkdir -p ${AGENT_DIR}/workspaces/exp
@@ -63,9 +66,9 @@ timeout $TIME_LIMIT_SECS mlzero \
     -e "/home/extracted_data/" \
     -i "/home/data/" \
     -o "${AGENT_DIR}/workspaces/exp" \
-    -n 20 \
+    -n 8 \
     -v 2 \
-    -u "Solve in 6 hours with best quality." \
+    -t "Solve in 6 hours with best quality." \
 2>&1 | tee "${AGENT_DIR}/workspaces/exp/run.log"
 # Check if the process timed out
 if [ $? -eq 124 ]; then
