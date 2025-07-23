@@ -14,8 +14,12 @@ ENV AGENT_DIR=${AGENT_DIR}
 RUN mkdir -p ${LOGS_DIR} ${CODE_DIR} ${AGENT_DIR}
 # Specify the name of the conda environment to use
 ENV CONDA_ENV_NAME=mlzero
+
+RUN conda tos accept --channel https://repo.anaconda.com/pkgs/main
+RUN conda tos accept --channel https://repo.anaconda.com/pkgs/r
+
 # Create new conda environment
-RUN conda create -n ${CONDA_ENV_NAME} python=3.11 -c conda-forge --override-channels -y
+RUN conda create -n ${CONDA_ENV_NAME} python=3.11 -y
 # Put all the agent files in the expected location
 COPY . ${AGENT_DIR}
 RUN eval "$(conda shell.bash hook)" && \
