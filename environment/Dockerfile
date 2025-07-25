@@ -41,8 +41,8 @@ ARG REQUIREMENTS=/tmp/requirements.txt
 
 COPY environment/requirements.txt ${REQUIREMENTS}
 
-RUN conda tos accept --channel https://repo.anaconda.com/pkgs/main
-RUN conda tos accept --channel https://repo.anaconda.com/pkgs/r
+RUN /opt/conda/bin/conda tos accept --channel https://repo.anaconda.com/pkgs/main
+RUN /opt/conda/bin/conda tos accept --channel https://repo.anaconda.com/pkgs/r
 
 # create conda environment and optionally install the requirements to it
 RUN /opt/conda/bin/conda create -n ${CONDA_ENV_NAME} python=${PYTHON_VERSION} -y
