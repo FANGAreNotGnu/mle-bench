@@ -60,16 +60,21 @@ mkdir -p ${AGENT_DIR}/workspaces/exp
 #ln -s ${LOGS_DIR} ${AGENT_DIR}/workspaces/exp
 #ln -s ${CODE_DIR} ${AGENT_DIR}/workspaces/exp/bestcode
 #ln -s ${SUBMISSION_DIR} ${AGENT_DIR}/workspaces/bestsubmission
+
 # Run the agent with timeout
 echo "Starting the agent with a time limit of $TIME_LIMIT..."
+conda tos accept --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --channel https://repo.anaconda.com/pkgs/r
 timeout $TIME_LIMIT_SECS mlzero \
     -e "/home/extracted_data/" \
     -i "/home/data/" \
     -o "${AGENT_DIR}/workspaces/exp" \
     -n 8 \
     -v 2 \
-    -t "Solve in 6 hours with best quality." \
+    --continuous_improvement \
+    -t "Solve in 4 hours with best (or extreme) quality." \
 2>&1 | tee "${AGENT_DIR}/workspaces/exp/run.log"
+
 # Check if the process timed out
 if [ $? -eq 124 ]; then
 echo "Timed out after $TIME_LIMIT"
